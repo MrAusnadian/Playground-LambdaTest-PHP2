@@ -37,18 +37,18 @@ jobs:
       
     - name: Run against Chrome
       continue-on-error: true
-      run: php ./LambdaTest.php
+      run: php ./Lambdatest.php
 
     - name: Run against Firefox
       env:
         LT_BROWSER: "firefox"
       continue-on-error: true
-      run: php ./LambdaTest.php
+      run: php ./Lambdatest.php
       
     - name: Run against Edge
       env:
         LT_BROWSER: "edge"
       continue-on-error: true
-      run: php ./LambdaTest.php
+      run: php ./Lambdatest.php
 
       
