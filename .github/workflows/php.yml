@@ -1,0 +1,54 @@
+name: PHP CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+env:
+  LT_USERNAME: ${{ secrets.LT_USERNAME }}
+  LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
+  LT_BROWSER: "chrome"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+      
+    - name: Run against Chrome
+      continue-on-error: true
+      run: php ./LambdaTest.php
+
+    - name: Run against Firefox
+      env:
+        LT_BROWSER: "firefox"
+      continue-on-error: true
+      run: php ./LambdaTest.php
+      
+    - name: Run against Edge
+      env:
+        LT_BROWSER: "edge"
+      continue-on-error: true
+      run: php ./LambdaTest.php
+
+      
